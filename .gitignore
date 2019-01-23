@@ -1,6 +1,8 @@
 seed-data*.csv
 /.env
 /node_modules/
+.ideas/
+
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
