@@ -1,4 +1,4 @@
-seed-data.csv
+seed-data*.csv
 /.env
 /node_modules/
 # Elastic Beanstalk Files
