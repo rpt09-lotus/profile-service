@@ -34,7 +34,7 @@ const getRandomImg = () => {
 // How many datas?
 let count = 10000000;
 // Get that fake data
-for (let i = 1; i < count; i++) {
+for (let i = 0; i < count; i++) {
   let profile = [];
   let firstName = faker.name.firstName();
   let lastName = faker.name.lastName();
