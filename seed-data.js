@@ -1,72 +1,90 @@
-// Data generation for csv file output
+// Data generation for json file output
 
 // Start timer
 let start = new Date();
 
-const fs = require('fs');
-const csv = require('fast-csv');
+const mongoose = require('mongoose');
+const Profile = require('./models/profile');
+// const fs = require('fs');
 const faker = require('faker');
 
-const csvStream = csv.createWriteStream({ headers: true });
-const ws = fs.createWriteStream('./seed-data.csv');
-// Pipe csv to node write stream
-csvStream.pipe(ws);
-// Write header line
-csvStream.write([
-  'firstName',
-  'lastName',
-  'email',
-  'location',
-  'dateJoined',
-  'bio',
-  'photoUrl',
-  'pro',
-  'activities'
-]);
+mongoose.connect(
+  process.env.MONGODB_URI || 'mongodb://localhost/profileService',
+  { useNewUrlParser: true }
+);
 
-// Random Facebook image url
+let db = mongoose.connection;
+
+db.on('error', (err) => {
+  console.error.bind(console, 'DB connection error: ');
+});
+db.once('open', () => {
+  console.log('...Mongoose connected');
+});
+
+// How many datas?
+let batchSize = 50000;
+let batch = 1;
+let profilesBatch;
+
 const getRandomImg = () => {
   let imgId = Math.floor(Math.random() * (10000 - 5)) + 4;
   return (
     'http://graph.facebook.com/v2.5/' + imgId + '/picture?height=200&width=200'
   );
 };
-// How many datas?
-let count = 10000000;
-// Get that fake data
-for (let i = 0; i < count; i++) {
-  let profile = [];
-  let firstName = faker.name.firstName();
-  let lastName = faker.name.lastName();
-  let email = faker.internet.email();
-  let location = faker.address.city() + ', ' + faker.address.state();
-  let dateJoined = faker.date.month();
-  let bio = faker.lorem.sentence();
-  let photoUrl = getRandomImg();
-  let pro = '0';
-  let activities = `["${faker.lorem.word()}","${faker.lorem.word()}","${faker.lorem.word()}","${faker.lorem.word()}","${faker.lorem.word()}"]`;
-  // Array-i-fy it for the stream
-  profile = [
-    firstName,
-    lastName,
-    email,
-    location,
-    dateJoined,
-    bio,
-    photoUrl,
-    pro,
-    activities
-  ];
-  // Add it to the write stream
-  csvStream.write(profile);
-}
 
-csvStream.end();
+const makeBatch = () => {
+  profilesBatch = [];
+  // Get that fake data
+  for (let i = 0; i < batchSize; i++) {
+    let profile = new Profile({
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      location: faker.address.city() + ', ' + faker.address.state(),
+      dateJoined: faker.date.month(),
+      bio: faker.lorem.sentence(),
+      photoUrl: getRandomImg(),
+      pro: 0,
+      activities: [
+        faker.lorem.word(),
+        faker.lorem.word(),
+        faker.lorem.word(),
+        faker.lorem.word(),
+        faker.lorem.word()
+      ]
+    });
+    profilesBatch.push(profile);
+  }
+};
 
-csvStream.on('end', () => {
+const saveBatches = () => {
+  makeBatch();
+  return new Promise(function(resolve, reject) {
+    Profile.insertMany(profilesBatch, (err, docs) => {
+      if (err) {
+        console.error('...insertMany error: ', err);
+      } else {
+        console.log(`...Batch ${batch} saved`);
+        resolve();
+      }
+    });
+  });
+};
+
+let makeAndSave = async () => {
+  while (batch < 201) {
+    await saveBatches();
+    batch++;
+    // console.log(batch);
+  }
   let end = new Date();
   let seconds = (end.getTime() - start.getTime()) / 1000;
   console.log(
-    `... ⏰ Done! Wrote ${count} records to seed-data.csv in ${seconds} seconds`
+    `... ⏰  Done! Wrote 10,000,000 records to DB in ${seconds} seconds`
   );
-});
+  db.close();
+};
+
+makeAndSave();

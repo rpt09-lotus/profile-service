@@ -4,6 +4,10 @@ seed-data*.json
 /node_modules/
 .ideas/
 
+.eslint*
+
+
+
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
