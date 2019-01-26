@@ -5,7 +5,6 @@ let start = new Date();
 
 const mongoose = require('mongoose');
 const Profile = require('./models/profile');
-// const fs = require('fs');
 const faker = require('faker');
 
 mongoose.connect(
@@ -25,17 +24,10 @@ db.once('open', () => {
 // How many datas?
 let batchSize = 50000;
 let batch = 1;
-let profilesBatch;
-
-const getRandomImg = () => {
-  let imgId = Math.floor(Math.random() * (10000 - 5)) + 4;
-  return (
-    'http://graph.facebook.com/v2.5/' + imgId + '/picture?height=200&width=200'
-  );
-};
+let profilesBatch = [];
 
 const makeBatch = () => {
-  profilesBatch = [];
+  profilesBatch.length = 0;
   // Get that fake data
   for (let i = 0; i < batchSize; i++) {
     let profile = new Profile({
@@ -45,7 +37,11 @@ const makeBatch = () => {
       location: faker.address.city() + ', ' + faker.address.state(),
       dateJoined: faker.date.month(),
       bio: faker.lorem.sentence(),
-      photoUrl: getRandomImg(),
+      photoUrl:
+        'http://graph.facebook.com/v2.5/' +
+        Math.floor(Math.random() * (10000 - 5)) +
+        4 +
+        '/picture?height=200&width=200',
       pro: 0,
       activities: [
         faker.lorem.word(),
@@ -77,7 +73,6 @@ let makeAndSave = async () => {
   while (batch < 201) {
     await saveBatches();
     batch++;
-    // console.log(batch);
   }
   let end = new Date();
   let seconds = (end.getTime() - start.getTime()) / 1000;
