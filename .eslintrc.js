@@ -1,8 +1,16 @@
+/**
+ * These rules enforce the Hack Reactor Style Guide
+ *
+ * Visit this repo for more information:
+ *   https://github.com/reactorcore/eslint-config-hackreactor
+ */
+
 module.exports = {
-  extends: 'hackreactor',
+  extends: './node_modules/eslint-config-hackreactor/index.js',
   rules: {
-    // Rules here will override the 'hackreactor' configuration
-    // http://eslint.org/docs/rules/
-    parserOptions: { ecmaVersion: 8 }
+    camelcase: 'off'
+  },
+  parserOptions: {
+    ecmaVersion: 2017
   }
 };

@@ -69,7 +69,7 @@ const saveBatches = () => {
   });
 };
 
-let makeAndSave = async () => {
+const makeAndSave = async () => {
   while (batch < 201) {
     await saveBatches();
     batch++;
