@@ -1,4 +1,4 @@
-// Data generation for json file output
+// Generate data records and populate MongoDB
 
 // Start timer
 let start = new Date();

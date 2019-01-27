@@ -1,8 +1,10 @@
-DROP DATABASE IF EXISTS profiles_db;
+SET FOREIGN_KEY_CHECKS = 0;
 
-CREATE DATABASE profiles_db;
+DROP TABLE IF EXISTS profiles;
+DROP TABLE IF EXISTS activities;
+DROP TABLE IF EXISTS prof_act;
 
-USE profiles_db;
+SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE `profiles` (
 	`prof_id` int NOT NULL AUTO_INCREMENT,
@@ -232,7 +234,16 @@ INSERT INTO `profiles` (`prof_id`, `first_name`, `last_name`, `email`, `location
 INSERT INTO `profiles` (`prof_id`, `first_name`, `last_name`, `email`, `location`, `date_joined`, `bio`, `photo_url`, `pro`) VALUES (98, 'Tre', 'Heaney', 'ypowlowski@example.com', 'Fritzport, MI', '1972-01-22', 'Nesciunt rerum totam nesciunt eum. Ut nemo temporibus quas velit et id odio. Possimus voluptatem earum delectus nulla molestiae fuga quo voluptatem.', 'http://graph.facebook.com/v2.5/80/picture?height=200&height=200', 1);
 INSERT INTO `profiles` (`prof_id`, `first_name`, `last_name`, `email`, `location`, `date_joined`, `bio`, `photo_url`, `pro`) VALUES (99, 'Sabrina', 'Romaguera', 'qflatley@example.net', 'North Hector, RI', '1986-10-02', 'Non a et quia neque et porro adipisci. Ut adipisci dolores id corporis est perferendis.', 'http://graph.facebook.com/v2.5/81/picture?height=200&height=200', 0);
 INSERT INTO `profiles` (`prof_id`, `first_name`, `last_name`, `email`, `location`, `date_joined`, `bio`, `photo_url`, `pro`) VALUES (100, 'Werner', 'Toy', 'bstroman@example.net', 'Lillaville, AK', '1999-06-24', 'Facilis qui autem unde nihil aut rem. Incidunt quibusdam molestiae optio sit. Aliquid nesciunt sapiente qui necessitatibus porro. Reiciendis asperiores voluptatem est ducimus.', 'http://graph.facebook.com/v2.5/82/picture?height=200&height=200', 1);
+-- COPY profiles FROM 'path/to/db/profiles.csv' (DELIMITER ',');
 
+LOAD DATA LOCAL INFILE
+'/Users/jeff/dev/repos/rpt09-SDC/profile-service/database/profiles.csv'
+INTO TABLE profiles
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(prof_id,first_name,last_name,email,location,date_joined,bio,photo_url,pro);
 
 INSERT INTO `prof_act` (`act_id`, `prof_id`) VALUES (76, 98);
 INSERT INTO `prof_act` (`act_id`, `prof_id`) VALUES (73, 62);
@@ -334,14 +345,25 @@ INSERT INTO `prof_act` (`act_id`, `prof_id`) VALUES (58, 38);
 INSERT INTO `prof_act` (`act_id`, `prof_id`) VALUES (53, 42);
 INSERT INTO `prof_act` (`act_id`, `prof_id`) VALUES (3, 33);
 INSERT INTO `prof_act` (`act_id`, `prof_id`) VALUES (90, 18);
+-- COPY prof_act FROM 'path/to/db/profileActivities.csv' (DELIMITER ',');
+
+LOAD DATA LOCAL INFILE
+'/Users/jeff/dev/repos/rpt09-SDC/profile-service/database/profileActivities.csv'
+INTO TABLE prof_act
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(act_id,prof_id);
+
 /*  Execute this file from the command line by typing:
  *    mysql -u <USER> < schema.sql
  *    OR
  *    mysql -u <USER> -p < schema.sql
- *  For example, on a pairing station, it'll be 
+ *  For example, on a pairing station, it'll be
  *    mysql -u student -p < schema.sql
  *  and then you'll have to enter the password, student
  *  On your personal computer, if you haven't set up
- *  a password, it'll be 
+ *  a password, it'll be
  *    mysql -u root < schema.sql
 */
