@@ -25,12 +25,15 @@ db.once('open', () => {
 let batchSize = 50000;
 let batch = 1;
 let profilesBatch = [];
+let counter = 0;
 
 const makeBatch = () => {
   profilesBatch.length = 0;
   // Get that fake data
   for (let i = 0; i < batchSize; i++) {
+    counter++;
     let profile = new Profile({
+      _id: counter,
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
