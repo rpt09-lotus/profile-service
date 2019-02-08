@@ -6,7 +6,7 @@ function ActivitiesList(props) {
   const activitiesTags = activitiesList.map((activity) => {
     return <div key={activity} className={styles.activitiesTags}>{activity}</div>
   });
-  console.log(activitiesTags);
+  console.log('activitiesTags: ', activitiesTags);
   return (
     <div className={styles.activitiesTagList}>{activitiesTags}</div>
   );
