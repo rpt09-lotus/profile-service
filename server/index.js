@@ -15,7 +15,7 @@ const app = express();
 //   }
 // };
 
-const PORT = 80;  // setPORT();
+const PORT = 3002;  // setPORT();
 
 app.use(cors());
 
@@ -68,6 +68,39 @@ app.get('/user/:id', function (req, res) {
     })
     .then((data) => {
       res.send(data);
+    });
+});
+
+app.patch('/user/:id/:newName', function (req, res) {
+  db.updateFirstName(req.params.id, req.params.newName)
+    .then((profileRow) => {
+      db.getUser(req.params.id)
+        .then((rawUserData) => {
+          const rawData = rawUserData[0];
+          let userData = {
+            data: {
+              type: 'users',
+              id: rawData.prof_id,
+              attributes: {
+                first_name: rawData.first_name,
+                last_name: rawData.last_name,
+                email: rawData.email,
+                location: rawData.location,
+                date_joined: rawData.date_joined.toJSON().substring(0, 10),
+                favorite_activities: [],
+                bio: rawData.bio,
+                photo_url: rawData.photo_url,
+                pro: !!+rawData.pro
+              }
+            }
+          };
+
+          return userData;
+        })
+        .then((data) => {
+          console.log('data: ', data);
+          res.send(data);
+        });
     });
 });
 

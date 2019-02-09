@@ -46,7 +46,22 @@ const getUserActivities = (id) => {
   });
 };
 
+const updateFirstName = (id, newName) => {
+  return new Promise((resolve, reject) => {
+    connection.query(`UPDATE profiles SET first_name = '${newName}' WHERE prof_id = ${id}`, function (
+      err,
+      row,
+      fields
+    ) {
+      if (err) { throw err; }
+      resolve(row);
+    });
+  });
+};
+
+
 module.exports = {
   getUser,
-  getUserActivities
+  getUserActivities,
+  updateFirstName
 };
