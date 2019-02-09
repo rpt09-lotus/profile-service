@@ -7,15 +7,15 @@ require('dotenv').config();
 
 const app = express();
 
-const setPORT = () => {
-  if (process.env.NODE_ENV !== 'production') {
-    return 3002;
-  } else {
-    return 8081;
-  }
-};
+// const setPORT = () => {
+//   if (process.env.NODE_ENV !== 'production') {
+//     return 3002;
+//   } else {
+//     return 80;
+//   }
+// };
 
-const PORT = setPORT();
+const PORT = 80;  // setPORT();
 
 app.use(cors());
 
@@ -24,11 +24,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(__dirname + '/../public/'));
 
-app.get('/:trailId(\\d+$)*?', function(req, res) {
+app.get('/:trailId(\\d+$)*?', function (req, res) {
   res.status(200).sendFile(path.resolve(__dirname + '/../public/index.html'));
 });
 
-app.get('/user/:id', function(req, res) {
+app.get('/user/:id', function (req, res) {
   let finalData;
   db.getUser(req.params.id)
     .then((rawUserData) => {
