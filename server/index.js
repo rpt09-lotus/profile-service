@@ -15,7 +15,8 @@ const app = express();
 //   }
 // };
 
-const PORT = 3002;  // setPORT();
+// setPORT();
+const PORT = 3002;
 
 app.use(cors());
 

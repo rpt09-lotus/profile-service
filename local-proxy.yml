@@ -1,0 +1,16 @@
+config:
+  target: 'http://localhost:3000'
+  phases:
+    - duration: 20
+      arrivalRate: 1005
+  defaults:
+    headers:
+      x-my-service-auth: 'foo'
+  payload:
+    path: "ids.csv"
+    fields:
+      - "id"
+scenarios:
+  - flow:
+    - get:
+        url: "/{{ id }}"

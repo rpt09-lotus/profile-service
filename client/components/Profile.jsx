@@ -46,11 +46,12 @@ export default class Profile extends Component {
       }
     }
     const url = () => {
-      if (window.location.origin === 'http://localhost:3002') {
-        return 'http://localhost:3002/user/' + determineId();
-      } else {
-        return 'http://profile-service.be6c6ztrma.us-west-2.elasticbeanstalk.com/user/' + determineId();
-      }
+      return 'http://localhost:3002/user/' + determineId();
+      // if (window.location.origin === 'http://localhost:3002') {
+      //   return 'http://localhost:3002/user/' + determineId();
+      // } else {
+      //   return 'http://profile-service.be6c6ztrma.us-west-2.elasticbeanstalk.com/user/' + determineId();
+      // }
     };
 
     fetch(url())
